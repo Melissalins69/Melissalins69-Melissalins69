@@ -1,0 +1,26 @@
+name: Update README
+
+on:
+  schedule:
+    - cron: "0 */6 * * *" # a cada 6 horas
+  workflow_dispatch:
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Data aktualizacji
+        run: |
+          DATE=$(date)
+          sed -i "s|<!--START_SECTION:time-->.*<!--END_SECTION:time-->|<!--START_SECTION:time-->$DATE<!--END_SECTION:time-->|" README.md
+
+      - name: Commit e push
+        run: |
+          git config --global user.name "Melissalins69"
+          git config --global user.email "melissalins69@users.noreply.github.com"
+          git add .
+          git commit -m "update: README automático" || exit 0
+          git push
